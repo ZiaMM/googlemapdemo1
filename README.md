@@ -1,24 +1,13 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Ruby version: 2.5.5
+Rails version: 4.2.11.1
 
-Things you may want to cover:
+Database Seed to populate DB
 
-* Ruby version
+Add your own .env file with Google API Key
+Add your own .secret file 
 
-* System dependencies
+Run tests with bundle exec rspec
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Running Environment Use for Dev and Production: CentOS 7
