@@ -1,0 +1,15 @@
+<% title("Google Maps Demo") %>
+
+<h1>Testing Google Maps</h1>
+<br>
+
+<div id="map"></div>
+<div id="legend"><h3>Legend</h3></div>
+
+<script type="text/javascript">
+    <%= render :partial => "pages.js.erb" %>
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=<%= ENV.fetch('GOOGLE_API_KEY') %>&callback=initMap">
+</script>

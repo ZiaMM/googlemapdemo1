@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title><%= @title || "Mapdemo1" %></title>
+  <%= favicon_link_tag 'favicon.ico' %>
+  <%#= favicon_link_tag 'apple-touch-icon.png', rel: 'apple-touch-icon', type: 'image/png' %>
+  <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag params[:controller] if ::Rails.application.assets.find_asset("#{params[:controller]}.css") %>
+
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => false  if ::Rails.application.assets.find_asset("#{params[:controller]}.js.erb") %>
+
+  <%= csrf_meta_tags %>
+
+</head>
+<body>
+  <div id="wrap">
+    <header>
+      <%= render 'layouts/navigation' %>
+    </header>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 text-center">
+          <%= render 'layouts/messages' %>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12" style="text-align: center;">
+        <%= yield %>
+      </div>
+    </div>
+
+   </div> <!--  id wrap -->
+
+
+
+  <%= render 'layouts/footer' %>
+
+</body>
+</html>

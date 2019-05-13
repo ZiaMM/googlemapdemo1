@@ -1,0 +1,90 @@
+
+  bangkok_center_lat_long = jQuery.parseJSON(<%=raw @bangkok_center_location.to_json.inspect %>);
+
+  function initMap() {
+
+    var mapCenterLatlng = {lat: parseFloat(bangkok_center_lat_long.lat), lng: parseFloat(bangkok_center_lat_long.long)};
+
+    // parseJSON fails w/o 'inspect' after to_json
+    my_store_markers = jQuery.parseJSON(<%=raw @location_hash_array.to_json.inspect %>);
+
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      // zoom: 9,
+      zoom: <%=raw @map_zoom_level %>,
+      center: mapCenterLatlng
+    });
+
+    images_by_shop_type = jQuery.parseJSON(<%=raw @images_by_shop_type.to_json.inspect %>);
+
+    function iterateMarkerData(){
+      // Will Put New Markers In This Loop
+      $(my_store_markers).each(function( index ) {
+        // console.log( index + ": " + $( this ) );
+        $( this ).each( function(i, marker_data){
+          // console.log( marker_data.shop_type + " " + marker_data.name + " " + marker_data.lat + ". " + marker_data.long );
+          setMarker(marker_data, i)
+        })
+      });
+    }
+
+    function setMarker(marker_data, i){
+      // var myLatlng = {lat: -25.363, lng: 131.044};
+      var myLatlng = {lat: parseFloat(marker_data.latitude), lng: parseFloat(marker_data.longitude)};
+      var image = "assets/" + images_by_shop_type[marker_data.shop_type]
+      var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        title: 'Click to View Store Name',
+        icon: image,
+        id: i //,
+        // animation: google.maps.Animation.DROP
+      });
+
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+
+      var infowindow = new google.maps.InfoWindow({
+        content: marker_data.name
+      });
+    }
+
+
+    function setLegend(){
+      var legend = document.getElementById('legend');
+      for (var key in images_by_shop_type) {
+        var name = key
+        var icon = images_by_shop_type[key];
+        var div = document.createElement('div');
+        div.innerHTML = ("<img src=assets/"  + icon + ">&nbsp;&nbsp;<span class='legend-name'>" + name + "</span>");
+        legend.appendChild(div);
+      }
+      map.controls[google.maps.ControlPosition.LEFT_TOP].push(legend);
+    }
+
+    // loads, but "show" happens before legend ready because the google-map functions return before rendering-complete
+    // var promise = new Promise(function(resolve, reject){
+    //   resolve(iterateMarkerData());
+    // }).then(function(data){
+    //   setLegend();
+    // }).then(function(data){
+    //   var legend = document.getElementById('legend');
+    // }).then(function(data){
+    //   $('#legend').show();
+    // });
+
+    iterateMarkerData();
+    setLegend();
+    // don't show "legend" div until has been placed in proper location
+    // not perfect, because google's elements (map/satellite selector) sometimes load later
+    google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+      var checkExist = setInterval(function() {
+        if ($('#legend').css('position') == 'absolute') {
+          $('#legend').show();
+          clearInterval(checkExist);
+        }
+      }, 100);
+    });
+
+  } // end of init-map
